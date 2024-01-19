@@ -37,6 +37,18 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    sourceSets {
+        getByName("main") {
+            res {
+                srcDirs("src\\main\\res", "src\\main\\res\\2",
+                    "src\\main\\res",
+                    "src\\main\\res\\layouts\\auth", "src\\main\\res", "src\\main\\res\\layouts\\auth",
+                    "src\\main\\res",
+                    "src\\main\\res\\layouts\\admin", "src\\main\\res", "src\\main\\res\\layouts\\home"
+                )
+            }
+        }
+    }
 }
 
 dependencies {
@@ -46,6 +58,9 @@ dependencies {
 
     // Add the dependency for the Firebase Authentication library
     implementation("com.google.firebase:firebase-auth")
+
+    // Declare the dependency for the Cloud Firestore library
+    implementation("com.google.firebase:firebase-firestore")
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

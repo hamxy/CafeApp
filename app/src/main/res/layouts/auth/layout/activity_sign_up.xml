@@ -4,8 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FE9B12"
-    tools:context=".SignInActivity">
+    android:background="#FFFFFF"
+    tools:context=".SignUpActivity">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="415dp"
+        android:layout_height="273dp"
+        app:srcCompat="@drawable/pexels_lukas_942813"
+        tools:layout_editor_absoluteX="-11dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <EditText
         android:id="@+id/emailEditText"
@@ -23,56 +31,59 @@
         android:id="@+id/passwordEditText"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginTop="30dp"
-        android:hint="@string/password"
+        android:layout_marginTop="20dp"
         android:ems="10"
+        android:hint="@string/password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
 
+    <EditText
+        android:id="@+id/passwordRetypeEditText"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="@string/passwordRetype"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
+
     <Button
         android:id="@+id/signUpBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/btnSignIn"
+        android:layout_marginTop="20dp"
+        android:text="@string/btnSignUp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
-
-    <TextView
-        android:id="@+id/signUpTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="@string/signUpTextView"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUpBtn"
-        tools:text="@string/signUpTextView" />
-
-    <ImageView
-        android:id="@+id/logoImageView"
-        android:layout_width="155dp"
-        android:layout_height="138dp"
-        android:layout_marginTop="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/coffee_logo" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordRetypeEditText" />
 
     <TextView
         android:id="@+id/appNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:fontFamily="monospace"
         android:text="@string/app_name"
         android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logoImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <TextView
+        android:id="@+id/signUpTextView"
+        android:layout_width="261dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/signInTextView"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signUpBtn"
+        tools:text="@string/signInTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

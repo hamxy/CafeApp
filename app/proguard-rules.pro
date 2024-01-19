@@ -12,6 +12,10 @@
 #   public *;
 #}
 
+-keep class com.example.cafeapp.data.Item { *; }
+-keepclassmembers class com.example.cafeapp.data.Item { *; }
+
+
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

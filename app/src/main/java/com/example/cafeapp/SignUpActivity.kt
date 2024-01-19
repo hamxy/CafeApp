@@ -60,9 +60,12 @@ class SignUpActivity : AppCompatActivity() {
                     auth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(this) {
                         task ->
                         if (task.isSuccessful) {
-                            // Sign-up success, log it and redirect to main activity
+                            // Sign-up success, log in and redirect to main activity
                             Log.d("success", "createUserWithEmail:success")
-                            startActivity(Intent(this, MainActivity::class.java))
+
+                            val intent = Intent(this, MainActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
                         }
                         else {
                             // If sign in fails, display a message to the user
@@ -75,10 +78,6 @@ class SignUpActivity : AppCompatActivity() {
                     }
                 }
             }
-
-
-
-
         }
     }
 }

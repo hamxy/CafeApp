@@ -2,10 +2,13 @@ package com.example.cafeapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.example.cafeapp.fragments.CartFragment
+import com.example.cafeapp.fragments.HomeFragment
+import com.example.cafeapp.fragments.OrdersFragment
+import com.example.cafeapp.fragments.ProfileFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -13,16 +16,8 @@ import com.google.firebase.auth.auth
 
 class MainActivity : AppCompatActivity() {
 
-//    private lateinit var nameEditText: EditText
-//    private lateinit var surnameEditText: EditText
-//    private lateinit var displayTextView: TextView
-//    private lateinit var submitButton: Button
-
+    private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var auth: FirebaseAuth
-    private lateinit var submit: Button
-    private lateinit var loggedAs: TextView
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,53 +26,60 @@ class MainActivity : AppCompatActivity() {
         // initialise Firebase Auth
         auth = Firebase.auth
 
-        // initialise views
-        submit = findViewById(R.id.logoutBtn)
-        loggedAs = findViewById(R.id.loggedAsTextView)
-
         // Check if user is signed in
         // If user isn't signed in, redirect to login activity
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
+        if (auth.currentUser == null) {
             startActivity(Intent(this, SignInActivity::class.java))
         }
-        else {
-            loggedAs.text = currentUser.email
+
+        // initialise navigation
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
+
+        // switch between fragments
+        bottomNavigationView.setOnItemSelectedListener { menuItem ->
+            when(menuItem.itemId){
+                R.id.bottom_home -> {
+                    replaceFragment(HomeFragment())
+                    true
+                }
+                R.id.bottom_cart -> {
+                    replaceFragment(CartFragment())
+                    true
+                }
+                R.id.bottom_orders -> {
+                    replaceFragment(OrdersFragment())
+                    true
+                }
+                R.id.bottom_profile -> {
+                    replaceFragment(ProfileFragment())
+                    true
+                }
+                else -> false
+            }
         }
 
-        // update view of current logged in user
-
-
-        // logout and redirect to login screen
-        submit.setOnClickListener {
-            auth.signOut()
-            intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
-        }
+        // initial fragment
+        replaceFragment(HomeFragment())
 
 
 
 
 
 
-        // OLD
-//        // Initialise views
-//        nameEditText = findViewById(R.id.nameEditText)
-//        surnameEditText = findViewById(R.id.surnameEditText)
-//        submitButton = findViewById(R.id.submitButton)
-//
-//        // Set onClickListener on Button
-//        submitButton.setOnClickListener {
-//            val fullName = fullName(nameEditText, surnameEditText)
-//            val intent = Intent(this, FullNameActivity::class.java)
-//
-//            intent.putExtra("fullName", fullName)
+//        // update view of current logged in user
+//        // logout and redirect to login screen
+//        submit.setOnClickListener {
+//            auth.signOut()
+//            val intent = Intent(this, SignInActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 //            startActivity(intent)
-//
+//            finish()
 //        }
+
+
     }
 
-    private fun fullName(name: EditText, surname: EditText): String {
-        return "${name.text.toString()} ${surname.text.toString()}"
+    private fun replaceFragment(fragment: Fragment){
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit()
     }
 }
