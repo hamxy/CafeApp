@@ -12,7 +12,11 @@ import com.example.cafeapp.R
 import com.example.cafeapp.data.Item
 
 
-class CartAdapter(private val cartItems: MutableList<Item>) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
+class CartAdapter(private val cartItems: MutableList<Item>, private val listener: CartItemListener) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
+
+    interface CartItemListener {
+        fun onItemRemoved()
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,6 +36,7 @@ class CartAdapter(private val cartItems: MutableList<Item>) : RecyclerView.Adapt
             CartManager.removeItem(currentItem)
             cartItems.removeAt(holder.adapterPosition)
             notifyItemRemoved(holder.adapterPosition)
+            listener.onItemRemoved() // Notify the listener
             Toast.makeText(holder.itemView.context, "${currentItem.name} removed from cart", Toast.LENGTH_SHORT).show()
         }
     }
