@@ -7,9 +7,9 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cafeapp.CartManager
 import com.example.cafeapp.R
 import com.example.cafeapp.data.Item
+import com.example.cafeapp.helpers.CartManager
 
 
 class CartAdapter(private val cartItems: MutableList<Item>, private val listener: CartItemListener) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {

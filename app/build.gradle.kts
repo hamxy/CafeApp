@@ -59,6 +59,10 @@ dependencies {
     // Add the dependency for the Firebase Authentication library
     implementation("com.google.firebase:firebase-auth")
 
+    // Messaging for notifications
+    implementation("com.google.firebase:firebase-messaging:20.2.0")
+
+
     // Declare the dependency for the Cloud Firestore library
     implementation("com.google.firebase:firebase-firestore")
 

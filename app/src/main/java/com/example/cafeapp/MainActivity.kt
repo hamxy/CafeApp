@@ -13,7 +13,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -21,65 +20,53 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main) // Set the layout for this activity
 
-        // initialise Firebase Auth
+        // Initialize Firebase Authentication
         auth = Firebase.auth
 
-        // Check if user is signed in
-        // If user isn't signed in, redirect to login activity
+        // Redirect to login activity if no user is currently signed in
         if (auth.currentUser == null) {
             startActivity(Intent(this, SignInActivity::class.java))
         }
 
-        // initialise navigation
+        // Initialize the bottom navigation view
         bottomNavigationView = findViewById(R.id.bottom_navigation)
 
-        // switch between fragments
+        // Set up navigation item selection handling
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId){
                 R.id.bottom_home -> {
-                    replaceFragment(HomeFragment())
+                    replaceFragment(HomeFragment()) // Switch to HomeFragment
                     true
                 }
                 R.id.bottom_cart -> {
-                    replaceFragment(CartFragment())
+                    replaceFragment(CartFragment()) // Switch to CartFragment
                     true
                 }
                 R.id.bottom_orders -> {
-                    replaceFragment(OrdersFragment())
+                    replaceFragment(OrdersFragment()) // Switch to OrdersFragment
                     true
                 }
                 R.id.bottom_profile -> {
-                    replaceFragment(ProfileFragment())
+                    replaceFragment(ProfileFragment()) // Switch to ProfileFragment
                     true
                 }
                 else -> false
             }
         }
 
-        // initial fragment
+        // Set the initial fragment to HomeFragment when the activity starts
         replaceFragment(HomeFragment())
-
-
-
-
-
-
-//        // update view of current logged in user
-//        // logout and redirect to login screen
-//        submit.setOnClickListener {
-//            auth.signOut()
-//            val intent = Intent(this, SignInActivity::class.java)
-//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//            startActivity(intent)
-//            finish()
-//        }
-
-
     }
 
-    private fun replaceFragment(fragment: Fragment){
+    // Function to replace the current fragment in the frame container
+    fun replaceFragment(fragment: Fragment){
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit()
+    }
+
+    // Function to update the selected item in the bottom navigation
+    fun updateBottomNavigationSelection(itemId: Int) {
+        bottomNavigationView.selectedItemId = itemId
     }
 }

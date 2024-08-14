@@ -1,4 +1,4 @@
-package com.example.cafeapp
+package com.example.cafeapp.helpers
 
 import com.example.cafeapp.data.Item
 

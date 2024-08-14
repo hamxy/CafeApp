@@ -12,9 +12,12 @@ import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 class SignInActivity : AppCompatActivity() {
 
+    // Lateinit variables for Firebase authentication and UI elements
     private lateinit var auth: FirebaseAuth
     private lateinit var email: EditText
     private lateinit var password: EditText
@@ -23,67 +26,80 @@ class SignInActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
+        setContentView(R.layout.activity_sign_in) // Sets the layout for the activity
 
-        // Initialize Firebase Auth
+        // Initialize Firebase Authentication
         auth = Firebase.auth
         FirebaseApp.initializeApp(this)
 
-
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Redirect to MainActivity if the user is already signed in
         if (auth.currentUser != null) {
             val intent = Intent(this, MainActivity::class.java)
-
-            // Clear top to prevent going back to login screen
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            // Start activity
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Prevents returning to SignInActivity
             startActivity(intent)
         }
 
-        // Initialise views
+        // Initialize UI components by finding them in the layout
         email = findViewById(R.id.emailEditText)
         password = findViewById(R.id.passwordEditText)
         signIn = findViewById(R.id.signUpBtn)
         signUpTextView = findViewById(R.id.signUpTextView)
 
-        // SignIn
+        // Set a click listener on the sign-in button
         signIn.setOnClickListener {
-            val emailText: String = email.text.toString()
-            val passwordText: String = password.text.toString()
+            val emailText = email.text.toString()
+            val passwordText = password.text.toString()
 
+            // Check if the email and password fields are not empty
             if (emailText.isNotEmpty() && passwordText.isNotEmpty()) {
+                // Sign in with email and password using Firebase Authentication
                 auth.signInWithEmailAndPassword(emailText, passwordText)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            // Sign in success, redirect user to main activity
+                            // Successful sign in
                             Log.d("success", "signInWithEmail:success")
 
+                            // Fetch the FCM token for push notifications
+                            FirebaseMessaging.getInstance().token.addOnCompleteListener { tokenTask ->
+                                if (tokenTask.isSuccessful) {
+                                    val fcmToken = tokenTask.result
+                                    // Store the FCM token in Firestore
+                                    storeFcmTokenForUser(fcmToken)
+                                }
+                            }
+
+                            // Redirect to MainActivity after sign in
                             val intent = Intent(this, MainActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             startActivity(intent)
-
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // Sign in failed
                             Log.w("error", "signInWithEmail:failure", task.exception)
-                            Toast.makeText(
-                                baseContext,
-                                "Authentication failed.",
-                                Toast.LENGTH_SHORT,
-                            ).show()
+                            Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
                         }
                     }
             }
         }
 
-
-        // redirect to SignUp activity
+        // Set a click listener on the sign-up TextView to redirect to the SignUpActivity
         signUpTextView.setOnClickListener {
-            val intent = Intent(this, SignUpActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, SignUpActivity::class.java))
         }
+    }
 
-
-
-
+    // Function to store the FCM token in Firestore
+    private fun storeFcmTokenForUser(fcmToken: String) {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val usersCollection = FirebaseFirestore.getInstance().collection("users")
+            val userDocument = usersCollection.document(currentUser.email.toString())
+            userDocument.update("fcmToken", fcmToken)
+                .addOnSuccessListener {
+                    Log.d("FCM", "FCM token updated successfully")
+                }
+                .addOnFailureListener { e ->
+                    Log.w("FCM", "Error updating FCM token", e)
+                }
+        }
     }
 }

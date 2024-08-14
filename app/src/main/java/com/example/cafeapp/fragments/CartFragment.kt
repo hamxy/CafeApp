@@ -1,6 +1,5 @@
 package com.example.cafeapp.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,12 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cafeapp.CartManager
+import com.example.cafeapp.MainActivity
 import com.example.cafeapp.R
 import com.example.cafeapp.data.Order
+import com.example.cafeapp.helpers.CartManager
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -125,20 +126,28 @@ class CartFragment : Fragment(), CartAdapter.CartItemListener {
             .add(order)
             .addOnSuccessListener { documentReference ->
                 Log.d("Firestore", "DocumentSnapshot added with ID: ${documentReference.id}")
+
                 // Clear the cart
                 CartManager.clearCart()
-                // navigate the user to orders fragment
-                // Navigate to the OrdersFragment
-                findNavController().navigate(R.id.action_global_ordersFragment)
+
+                // Navigate the user to orders fragment
+                navigateToOrdersFragment()
+
+                // Show a long toast message
+                Toast.makeText(requireContext(), "Order placed successfully!", Toast.LENGTH_LONG).show()
 
             }
             .addOnFailureListener { e ->
                 Log.w("Firestore", "Error adding document", e)
-                // Handle the error (e.g., show a message to the user)
+                // Handle the error
             }
     }
 
-
-
-
+    private fun navigateToOrdersFragment() {
+        if (activity is MainActivity) {
+            val mainActivity = activity as MainActivity
+            mainActivity.replaceFragment(OrdersFragment())
+            mainActivity.updateBottomNavigationSelection(R.id.bottom_orders)
+        }
+    }
 }
